@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-
+let showCards = [];
 
 /*
  * Display the cards on the page
@@ -36,3 +36,24 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+const deck = document.querySelector('.deck');
+
+
+deck.addEventListener('click', event => {
+    const clickTarget = event.target;
+    if (clickTarget.classList.contains('card')) {
+        toggleCard(clickTarget);
+        addCards(clickTarget);
+    }
+});
+
+function toggleCard(clickTarget) {
+    clickTarget.classList.toggle('open');
+    clickTarget.classList.toggle('show');
+}
+
+function addCards(clickTarget) {
+    showCards.push(clickTarget);
+    console.log(toggleCard);
+}
