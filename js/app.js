@@ -1,7 +1,14 @@
 /*
+ * Global Variables
+ */
+let moves = 0;
+const deck = document.querySelector('.deck');
+
+/*
  * Create a list that holds all of your cards
  */
 let showCards = [];
+
 
 /*
  * Display the cards on the page
@@ -9,6 +16,24 @@ let showCards = [];
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+function shuffleDeck() {
+    const cardsToShuffle = Array.from(document.querySelectorAll('.deck li'));
+    const completedShuffle = shuffle(cardsToShuffle);
+    for (card of completedShuffle) {
+        deck.appendChild(card);
+    }
+}
+
+shuffleDeck();
+
+/*
+ * Increment Moves Function
+ */
+function incrementMove() {
+    moves++;
+    const movesText = document.querySelector('.moves');
+    movesText.innerHTML = moves;
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -37,23 +62,50 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-const deck = document.querySelector('.deck');
+
 
 
 deck.addEventListener('click', event => {
     const clickTarget = event.target;
-    if (clickTarget.classList.contains('card')) {
+    if (isClickValid(clickTarget)) {
         toggleCard(clickTarget);
         addCards(clickTarget);
+        if (showCards.length === 2) {
+            checkMatch(clickTarget);
+            incrementMove();
+        }
     }
 });
 
-function toggleCard(clickTarget) {
-    clickTarget.classList.toggle('open');
-    clickTarget.classList.toggle('show');
+function isClickValid(clickTarget) {
+    return(
+        clickTarget.classList.contains('card') && 
+        !clickTarget.classList.contains('match') && 
+        showCards.length < 2 && 
+        !showCards.includes(clickTarget)
+    );
+}
+
+function toggleCard(card) {
+    card.classList.toggle('open');
+    card.classList.toggle('show');
 }
 
 function addCards(clickTarget) {
     showCards.push(clickTarget);
     console.log(toggleCard);
+}
+
+function checkMatch() {
+    if(showCards[0].firstElementChild.className === showCards[1].firstElementChild.className) {
+        showCards[0].classList.toggle('match');
+        showCards[1].classList.toggle('match');
+        showCards = [];
+    } else {
+        setTimeout(() => {
+            toggleCard(showCards[0]);
+            toggleCard(showCards[1]);
+            showCards = [];
+            }, 1000);
+    }
 }
